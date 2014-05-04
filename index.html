@@ -2,27 +2,41 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>Javascript Function Graph</title>
+<meta name="description" content="Draw a graph showing which functions call other functions.">
+<meta name="keywords" content=" static analysis, graph, functions, javascript " />
 <style>
 	body {
 		/* font-size: 120%;  */
-		background: PapayaWhip;
+		background: rgb(255,248,235);
+		font-family: sans-serif;
+		color: rgb(50,50,50);
+	}
+	h1 { 
+		/*background: rgb(230,223,210);*/
+		font-weight: normal;
+		text-align: center;
 	}
 	#graph_canvas {
-		border: 1px solid black;
-		background-color: White;
+		border: 1px solid grey;
+		background-color: White; /*rgb(200,200,200);*/
+	}	
+	#warning {
+		color: Red;
 	}	
 </style>
-<script src="parse-js.js"></script>
-<script src="func.js"></script>
+<script type="text/javascript" src="parse-js.js"></script>
+<script type="text/javascript" src="func.js"></script>
 </head>
 <body>
-	<h1>Javascript function Graph Thingy</h1>
-	<p>Enter some javascript to get a graph showing which functions reference other functions. This may help you spot where your code could be simplified or to help understand other people's code. <h4>(Note: Not finished yet. Much not working, much bugs.)</h4></p>
+	<h1>Javascript function Graph</h1>
+	<p>Enter some javascript to get a graph showing which functions reference other functions. This may help you spot where your code could be simplified or to help understand other people's code. 
+	<h4>(Note: This program is based on simple token matching. More complicated ways of declaring and calling functions are not recognised and object methods with the same name cannot be distinguished between.)</h4></p>
 	Javascript:
 	<textarea id="edit_code" style="width: 100%;" rows=22 wrap="logical">
 //Example code
 
-function sally() {};
+function sally() {}
 
 sally.prototype.jim = function (){
    bert();
@@ -34,7 +48,7 @@ sally.prototype.sam = function (){
 	
 function bert() {
    bert();
-};
+}
 	
 function jane() {
    if ( sally() ){
@@ -42,12 +56,17 @@ function jane() {
    }
 }
 	</textarea>
-	
+	<p></p>
 	<form id="myform" name="myform">
-		<input type="button" name="button1" value="Draw Graph" onClick="draw_graph()">
+		<input type="button" name="button1" value="Draw Graph" onClick="draw()">&nbsp;&nbsp;&nbsp;   Zoom:
+		<input type="button" name="button2" value="-" onClick="change_scale(0.8)">
+		<input type="button" name="button3" value="+" onClick="change_scale(1.25)">
+		<span id="display_scale"></span>&nbsp;&nbsp;&nbsp;
+		<input id="expand_objects" type="checkbox" name="name" value="no" checked="true">Expand objects
+		<span id="debug"></span>
 	</form>
 	Graph: 
-	<br/>
+	<div id="warning"></div>
 	<canvas id="graph_canvas" width="500" height="300"></canvas>
 	<script type="text/javascript">
 	</script>
